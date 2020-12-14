@@ -35,6 +35,24 @@ Node* ATree::LLRotation(Node* p) {
 	return pl;
 }
 
+Node* ATree::RRRotation(Node* p) {
+	Node* pr = p->rchild;
+	Node* prl = pr->lchild;
+
+	pr->lchild = p;
+	p->rchild = prl;
+
+	//updating height
+	p->height = NodeHeight(p);
+	pr->height = NodeHeight(pr);
+
+	if (p == root) {
+		root = pr;
+	}
+
+	return pr;
+}
+
 Node *ATree::Rinsert(Node* t, int key) {
 	Node* p;
 	if (t == NULL) {
