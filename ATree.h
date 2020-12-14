@@ -18,6 +18,6 @@ public:
 
     // Traversal
     void Inorder(Node* p);
-    void Inorder() { Inorder(root); }
+        
 };
 
