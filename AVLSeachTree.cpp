@@ -143,6 +143,86 @@ void ATree::Inorder(Node* p) {
 	}
 }
 
+void ATree::deleteNodes(Node* t) {
+	if (t) {
+		deleteNodes(t->lchild);
+		delete t;
+		deleteNodes(t->rchild);
+	}
+}
+
+Node* ATree::InPre(Node* p) {
+	while (p && p->rchild != nullptr) {
+		p = p->rchild;
+	}
+	return p;
+}
+
+Node* ATree::InSucc(Node* p) {
+	while (p && p->lchild != nullptr) {
+		p = p->lchild;
+	}
+	return p;
+}
+
+Node* ATree::Delete(Node* p, int key) {
+	Node* q;
+	if (p == nullptr) {
+		return nullptr;
+	}
+	if (p->lchild == nullptr && p->rchild == nullptr) {
+		if (p == nullptr) {
+			root = nullptr;
+		}
+		delete p;
+		return nullptr;
+	}
+	if (key < p->data) {
+		p->lchild = Delete(p->lchild, key);
+	}
+	else if (key > p->data) {
+		p->rchild = Delete(p->rchild, key);
+	}
+	else {
+		if (NodeHeight(p->lchild) < NodeHeight(p->rchild)) {
+			q = InPre(p->lchild);
+			p->data = q->data;
+			p->lchild = Delete(p->lchild, q->data);
+		}
+		else {
+			q = InSucc(p->rchild);
+			p->data = q->data;
+			p->rchild = Delete(p->rchild, q->data);
+		}
+	}
+
+
+	// Update height
+	p->height = NodeHeight(p);
+
+	// Balance Factor and Rotation
+	if (BalanceFactor(p) == 2 && BalanceFactor(p->lchild) == 1) {  // L1 Rotation
+		return LLRotation(p);
+	}
+	else if (BalanceFactor(p) == 2 && BalanceFactor(p->lchild) == -1) {  // L-1 Rotation
+		return LRRotation(p);
+	}
+	else if (BalanceFactor(p) == -2 && BalanceFactor(p->rchild) == -1) {  // R-1 Rotation
+		return RRRotation(p);
+	}
+	else if (BalanceFactor(p) == -2 && BalanceFactor(p->rchild) == 1) {  // R1 Rotation
+		return RLRotation(p);
+	}
+	else if (BalanceFactor(p) == 2 && BalanceFactor(p->lchild) == 0) {  // L0 Rotation
+		return LLRotation(p);
+	}
+	else if (BalanceFactor(p) == -2 && BalanceFactor(p->rchild) == 0) {  // R0 Rotation
+		return RRRotation(p);
+	}
+	return p;
+
+}
+
 int main() {
 	int ch;
 	cout << "######## Welcome to AVL Tree Data Structure ###########" << endl;
@@ -151,6 +231,7 @@ int main() {
 		cout << "\nEnter the Operation, you want to perform on the binary tree " << endl;
 		cout << "[1] - Insert an Element" << endl;
 		cout << "[2] - Display Inorder" << endl;
+		cout << "[3] - Delete a Node" << endl;
 		cout << "[0] - Quit" << endl;
 		cout << "\nEnter your choice : ";
 		cin >> ch;
@@ -168,6 +249,14 @@ int main() {
 			B.Inorder(B.root);
 			cout << endl;
 		}
+		else if (ch == 3) {
+			int key;
+			cout << "\nEnter the key, you want to delete from the Binary Search Tree : ";
+			cin >> key;
+
+			B.Delete(B.root, key);
+			cout << "Deleted Successfully! " << endl;
+		}
 		else if (ch == 0) {
 			cout << "\nThanks for using the Application" << endl;
 		}
@@ -178,4 +267,4 @@ int main() {
 	} while (ch != 0);
 	
 	return 0;
-}
+}	

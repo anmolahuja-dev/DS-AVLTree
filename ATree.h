@@ -8,6 +8,9 @@ public:
 
     int NodeHeight(Node* p);
     int BalanceFactor(Node* p);
+    Node* InPre(Node*);
+    Node* InSucc(Node*);
+  
     Node* LLRotation(Node* p);
     Node* RRRotation(Node* p);
     Node* LRRotation(Node* p);
@@ -18,6 +21,12 @@ public:
 
     // Traversal
     void Inorder(Node* p);
+
+    //delete
+    Node* Delete(Node* p, int key);
+
+    void deleteNodes(Node* t);
+    ~ATree() { deleteNodes(root); }
         
 };
 
